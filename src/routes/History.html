@@ -1,0 +1,50 @@
+<AppBarModifier title="Histórico" />
+
+{#if dataList.length}
+<FlatList
+  data={dataList}
+  renderItem={DefaultRow}
+/>
+{:else}
+  <Dialog isOpen align="center">
+    Sem histórico.
+  </Dialog>
+{/if}
+
+<script>
+import { DefaultRow, FlatList } from '@mamba/flatlist/index.js';
+import Storage from '@mamba/pos/api/storage.js';
+
+export default {
+  components: {
+    FlatList,
+    AppBarModifier: '@mamba/appbar/Modifier.html',
+    Dialog: '@mamba/dialog/Dialog.html',
+  },
+  helpers: {
+    DefaultRow,
+  },
+  data() {
+    return {
+      dataList: [],
+    };
+  },
+  oncreate() {
+    const dataList = this.getData();
+    this.set({ dataList });
+  },
+  methods: {
+    getData() {
+      const history = JSON.parse(Storage.get('history'));
+      return history.map((item) => (
+        {
+          label: {
+            value: item.name,
+            description: new Date(item.date).toLocaleString('pt-BR'),
+          },
+        }
+      ));
+    },
+  },
+};
+</script>

@@ -1,0 +1,40 @@
+<AppBarModifier title="Início" />
+
+<Container>
+  <Header />
+  <p class="text">Clique em uma das opções abaixo ou use o teclado:</p>
+  <Menu />
+</Container>
+
+<script>
+  import Router from 'svelte-page';
+  import store from '../store.js';
+
+  export default {
+    components: {
+      AppBarModifier: '@mamba/appbar/Modifier.html',
+      Container: '@mamba/container',
+      Header: '../components/Header.html',
+      Menu: '../components/Menu.html',
+    },
+    oncreate() {
+      this.root.meta.setNavigable(true);
+      this.checkWelcome();
+    },
+    methods: {
+      checkWelcome() {
+        const { skipWelcome, started } = store.get();
+        if (!skipWelcome && !started) {
+          Router.go('/welcome');
+        }
+      },
+    },
+  };
+</script>
+
+<style type="text/postcss">
+  .text {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+</style>

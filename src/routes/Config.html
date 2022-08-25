@@ -1,0 +1,75 @@
+<AppBarModifier title="Configurações" />
+
+<div class="wrapper">
+  <Collection>
+
+    <Row
+      label="1. Mostrar instruções"
+      description="Exibe a tela de instruções na inicialização."
+      shortcut="1"
+    >
+      <div slot="right-sign">
+        <Switch checked={skipWelcome} on:change="changeWelcome(event.value)"/>
+      </div>
+    </Row>
+
+    <Row
+      label="2. Limpar histórico"
+      description="Apaga todo o histórico de consultas."
+      shortcut="2"
+      on:click="refs.confirmationDialog.open()"
+    >
+    </Row>
+
+    <Row label="Versão" rightLabel="0.1.0" />
+
+    <ConfirmationDialog
+      ref:confirmationDialog
+      title="Apagar histórico?"
+      positiveLabel="Sim"
+      negativeLabel="Não"
+      on:negative="this.close()"
+      on:positive="clearHistory()"
+    >
+      Isso apagará todo o histórico salvo e não poderá ser desfeito.
+    </ConfirmationDialog>
+
+    <Dialog ref:confirmPopup>
+      Histórico apagado.
+    </Dialog>
+
+  </Collection>
+</div>
+<script>
+  import Storage from '@mamba/pos/api/storage.js';
+
+  export default {
+    components: {
+      AppBarModifier: '@mamba/appbar/Modifier.html',
+      Row: '@mamba/collection/Row.html',
+      Collection: '@mamba/collection/Collection.html',
+      Switch: '@mamba/switch',
+      ConfirmationDialog: '@mamba/dialog/Confirmation.html',
+      Dialog: '@mamba/dialog/Dialog.html',
+    },
+    oncreate() {
+      const { skipWelcome } = JSON.parse(Storage.get('config'));
+      this.set({ skipWelcome: !skipWelcome });
+    },
+    methods: {
+      changeWelcome(value) {
+        Storage.setItem('config', { skipWelcome: !value });
+      },
+      clearHistory() {
+        Storage.setItem('history', []);
+        this.refs.confirmPopup.open(2000);
+      },
+    },
+  };
+</script>
+
+<style>
+  .wrapper {
+    display: inline-block;
+  }
+</style>

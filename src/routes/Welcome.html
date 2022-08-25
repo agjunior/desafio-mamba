@@ -1,0 +1,74 @@
+<Container>
+  <img src="../assets/star-wars.png" alt="Logo">
+  <p class="title">Check-in</p>
+
+  <p>Com este aplicativo você pode validar se os seus clientes pertecem ao universo de Star Wars.</p>
+  <br>
+  <p>Clique na opção "Validar" para verificar automaticamente a identidade do personagem. Também é possível utilizar o teclado numérico,</p>
+
+  <div>
+    <p class="label">Não mostrar novamente</p>
+    <Switch class="switch" on:change="change(event.value)"/>
+  </div>
+</Container>
+
+<Button
+  size="full"
+  bottom
+  shortcut="enter"
+  on:click="this.root.router.go('/')"
+>
+  Continuar (enter)
+</Button>
+
+<script>
+  import Storage from '@mamba/pos/api/storage.js';
+  import store from '../store.js';
+
+  export default {
+    components: {
+      Button: '@mamba/button',
+      Container: '@mamba/container',
+      Switch: '@mamba/switch',
+    },
+    oncreate() {
+      store.set({ started: true });
+      this.root.meta.setNavigable(false);
+    },
+    methods: {
+      change(value) {
+        Storage.setItem('config', { skipWelcome: value });
+      },
+    },
+  };
+</script>
+
+<style type="text/postcss">
+  img {
+    width: 80px;
+    margin: auto;
+    display: block;
+  }
+  .title {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  div {
+    padding-top: 20px;
+  }
+  .label {
+    float: left;
+    font-weight: 600;
+  }
+  /*  Não encontrei outra maneira de adicionar uma classe
+      num componente do Mamba sem o uso do global;
+
+      Como não sabie se o flex era suportado, preferi usar o float.
+  */
+  :global(.switch) {
+    float: right
+  }
+</style>

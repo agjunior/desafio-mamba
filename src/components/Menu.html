@@ -1,0 +1,48 @@
+<!-- O Svelte não conseguiu indentifcar nenhuma maneita de passar uma classe diretamente para o componente, nem mesmo usando refs
+    Então criei uma div wrapper para aplicar o estilo dos botões.
+-->
+
+<div>
+  <Button
+      size="normal"
+      on:click="this.root.router.go('/detail')"
+      shortcut="1"
+    >
+      Verificar
+    </Button>
+</div>
+<div>
+  <Button
+    size="normal"
+    secondary
+    on:click="this.root.router.go('/history')"
+    shortcut="2"
+  >
+    Histórico
+  </Button>
+</div>
+<div>
+  <Button
+    size="normal"
+    secondary
+    on:click="this.root.router.go('/config')"
+    shortcut="3"
+  >
+    Configurações
+  </Button>
+</div>
+
+<script>
+  export default {
+    components: {
+      Button: '@mamba/button',
+    },
+  };
+</script>
+
+<style type="text/postcss">
+  div {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+</style>
